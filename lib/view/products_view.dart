@@ -6,10 +6,18 @@ import '../components/products_grid.dart';
 
 enum FilterOptions {
   Favorite,
-  All
+  All,
 }
-class ProductsView extends StatelessWidget {
+
+class ProductsView extends StatefulWidget {
   ProductsView({Key? key}) : super(key: key);
+
+  @override
+  State<ProductsView> createState() => _ProductsViewState();
+}
+
+class _ProductsViewState extends State<ProductsView> {
+  bool _showFavoritesOnly = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +38,18 @@ class ProductsView extends StatelessWidget {
               ),
             ],
             onSelected: (FilterOptions selectedValue) {
-              if(selectedValue == FilterOptions.Favorite) {
-                provider.showFavoriteOnly();
-              } else {
-                provider.showAll();
-              }
+              setState(() {
+                if (selectedValue == FilterOptions.Favorite) {
+                  _showFavoritesOnly = true;
+                } else {
+                  _showFavoritesOnly = false;
+                }
+              });
             },
           )
         ],
       ),
-      body: ProductGrid(),
+      body: ProductGrid(_showFavoritesOnly),
     );
   }
 }

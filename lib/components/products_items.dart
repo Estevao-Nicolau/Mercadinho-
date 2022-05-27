@@ -4,6 +4,7 @@ import 'package:flutter_provider/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
 class ProductItems extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(
