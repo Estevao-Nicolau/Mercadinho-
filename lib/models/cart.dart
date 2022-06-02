@@ -17,9 +17,9 @@ class Cart with ChangeNotifier {
 
   double get totalAmount {
     double total = 0.0;
-    _items.forEach(((key, cartItem) {
+    _items.forEach((key, cartItem) {
       total += cartItem.price * cartItem.quantity;
-    }));
+    });
     return total;
   }
 
@@ -39,7 +39,7 @@ class Cart with ChangeNotifier {
       _items.putIfAbsent(
         product.id,
         () => CartItem(
-          id: Random.secure().toString(),
+          id: Random().nextDouble().toString(),
           productId: product.id,
           name: product.name,
           quantity: 1,
