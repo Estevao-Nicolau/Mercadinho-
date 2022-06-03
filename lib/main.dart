@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_provider/models/cart.dart';
+import 'package:flutter_provider/models/order_list.dart';
 import 'package:flutter_provider/models/product_list.dart';
 import 'package:flutter_provider/routes/app_routes.dart';
 import 'package:flutter_provider/view/cart_view.dart';
+import 'package:flutter_provider/view/orders_view.dart';
 import 'package:flutter_provider/view/products_detail_page.dart';
 import 'package:flutter_provider/view/products_view.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +26,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (BuildContext context) => Cart(),
         ),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => OrderList(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -32,10 +37,12 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(secondary: Colors.red),
         ),
-        home: ProductsView(),
+        // home: ProductsView(),
         routes: {
-          AppRoutes.PRODUCT_DETAILS: (ctx) => const ProductDetailPage(),
-          AppRoutes.CART: (ctx) => const CartView(),
+          AppRoutes.HOME: (ctx) =>  ProductsView(),
+          AppRoutes.PRODUCT_DETAILS: (ctx) =>  ProductDetailPage(),
+          AppRoutes.CART: (ctx) =>  CartView(),
+           AppRoutes.ORDERS: (ctx) =>  OrdersView(),
         },
       ),
     );
