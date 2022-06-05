@@ -11,6 +11,7 @@ import '../components/products_grid.dart';
 enum FilterOptions {
   Favorite,
   All,
+  cart,
 }
 
 class ProductsView extends StatefulWidget {
