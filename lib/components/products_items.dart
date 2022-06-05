@@ -41,11 +41,14 @@ class ProductItems extends StatelessWidget {
             product.name,
             textAlign: TextAlign.center,
           ),
-          trailing: IconButton(
-            onPressed: () {
-              cart.addItem(product);
-            },
-            icon: Icon(Icons.shopping_cart),
+          trailing: Consumer<Product>(
+            builder: (ctx, product, _) => IconButton(
+              onPressed: () {
+                cart.addItem(product);
+                product.toggleCart();
+              },
+              icon: Icon(product.isCart ? Icons.shopping_cart : Icons.add_shopping_cart_sharp),
+            ),
           ),
         ),
       ),
