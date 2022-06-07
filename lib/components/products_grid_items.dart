@@ -4,7 +4,7 @@ import 'package:flutter_provider/models/product.dart';
 import 'package:flutter_provider/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
-class ProductItems extends StatelessWidget {
+class ProductGridItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
@@ -45,9 +45,18 @@ class ProductItems extends StatelessWidget {
             builder: (ctx, product, _) => IconButton(
               onPressed: () {
                 cart.addItem(product);
-                product.toggleCart();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Produto adicionado com sucesso'),
+                    duration: Duration(seconds: 2),
+                    action: SnackBarAction(label: 'DESFAZER', onPressed: () {
+                      print('DESFAZER!');
+                    },),
+                  ),
+                );
+                // product.toggleCart();
               },
-              icon: Icon(product.isCart ? Icons.shopping_cart : Icons.add_shopping_cart_sharp),
+              icon: Icon(Icons.shopping_cart),
             ),
           ),
         ),
