@@ -45,18 +45,20 @@ class ProductGridItems extends StatelessWidget {
             builder: (ctx, product, _) => IconButton(
               onPressed: () {
                 cart.addItem(product);
+                product.toggleCart();
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Produto adicionado com sucesso'),
                     duration: Duration(seconds: 2),
                     action: SnackBarAction(label: 'DESFAZER', onPressed: () {
-                      print('DESFAZER!');
+                      cart.removeSingleItem(product.id);
                     },),
                   ),
                 );
                 // product.toggleCart();
               },
-              icon: Icon(Icons.shopping_cart),
+              icon: Icon(product.isCart ? Icons.add_shopping_cart : Icons.shopping_cart),
             ),
           ),
         ),

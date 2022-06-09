@@ -5,8 +5,9 @@ import 'package:flutter_provider/models/product_list.dart';
 import 'package:flutter_provider/routes/app_routes.dart';
 import 'package:flutter_provider/view/cart_view.dart';
 import 'package:flutter_provider/view/orders_view.dart';
-import 'package:flutter_provider/view/products_detail_page.dart';
 import 'package:flutter_provider/view/products_view.dart';
+import 'package:flutter_provider/view/products_detail_page.dart';
+import 'package:flutter_provider/view/products_detail_view.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -37,12 +38,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(secondary: Colors.red),
         ),
-        // home: ProductsView(),
+        
         routes: {
-          AppRoutes.HOME: (ctx) =>  ProductsView(),
-          AppRoutes.PRODUCT_DETAILS: (ctx) =>  ProductDetailPage(),
-          AppRoutes.CART: (ctx) =>  CartView(),
-           AppRoutes.ORDERS: (ctx) =>  OrdersView(),
+          AppRoutes.HOME: (ctx) => ProductsViewDetail(),
+          AppRoutes.PRODUCT_DETAILS: (ctx) => ProductDetailPage(),
+          AppRoutes.CART: (ctx) => CartView(),
+          AppRoutes.ORDERS: (ctx) => OrdersView(),
+          AppRoutes.PRODUCTS: (ctx) => ProductsView(),
         },
       ),
     );
