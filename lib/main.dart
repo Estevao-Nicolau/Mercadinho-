@@ -5,6 +5,7 @@ import 'package:flutter_provider/models/product_list.dart';
 import 'package:flutter_provider/routes/app_routes.dart';
 import 'package:flutter_provider/view/cart_view.dart';
 import 'package:flutter_provider/view/orders_view.dart';
+import 'package:flutter_provider/view/products_form_view.dart';
 import 'package:flutter_provider/view/products_view.dart';
 import 'package:flutter_provider/view/products_detail_page.dart';
 import 'package:flutter_provider/view/products_detail_view.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
           AppRoutes.CART: (ctx) => CartView(),
           AppRoutes.ORDERS: (ctx) => OrdersView(),
           AppRoutes.PRODUCTS: (ctx) => ProductsView(),
+          AppRoutes.PRODUCTS_FORM: (ctx) => ProductFormView(),
         },
       ),
     );
