@@ -23,21 +23,42 @@ class ProductsViewDetail extends StatefulWidget {
 
 class _ProductsViewDetail extends State<ProductsViewDetail> {
   bool _showFavoritesOnly = false;
+  bool _isLoading = true;
+
+  Future<void> _refreshProducts(BuildContext context) {
+    return Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ProductList>(
+      context,
+      listen: false,
+    ).loadProducts().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProductList>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Lista de Produtos')),
+        title: const Center(child: Text('Mercadinho')),
         actions: [
           PopupMenuButton(
             itemBuilder: (_) => [
-              PopupMenuItem(
+              const PopupMenuItem(
                 child: Text('Somente favorito'),
                 value: FilterOptions.Favorite,
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 child: Text('Todos'),
                 value: FilterOptions.All,
               ),
@@ -54,19 +75,24 @@ class _ProductsViewDetail extends State<ProductsViewDetail> {
           ),
           Consumer<Cart>(
             child: IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(AppRoutes.CART);
-                },
-              ),
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.CART);
+              },
+            ),
             builder: (ctx, cart, child) => Badge(
-              value:cart.itemCount.toString(),
+              value: cart.itemCount.toString(),
               child: child!,
             ),
           ),
         ],
       ),
-      body: ProductGrid(_showFavoritesOnly),
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProducts(context),
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : ProductGrid(_showFavoritesOnly),
+      ),
       drawer: AppDrawer(),
     );
   }
