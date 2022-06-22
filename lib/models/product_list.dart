@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_provider/models/product.dart';
 
+import '../exceptions/http_exception.dart';
+
 class ProductList with ChangeNotifier {
   final _baseUrl =
       'https://mercadinho-e32d1-default-rtdb.firebaseio.com/products';
@@ -113,9 +115,13 @@ class ProductList with ChangeNotifier {
         Uri.parse('$_baseUrl/${product.id}.json'),
       );
 
-      if(response.statusCode >= 400) {
+      if (response.statusCode >= 400) {
         _items.insert(index, product);
         notifyListeners();
+        throw HttpException(
+          msg: 'Não foi possivel excluir o produto.',
+          statusCode: response.statusCode,
+        );
       }
     }
   }
