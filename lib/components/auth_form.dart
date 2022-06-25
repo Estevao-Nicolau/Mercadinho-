@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_provider/models/auth.dart';
+import 'package:provider/provider.dart';
+
 
 enum AuthMode { Signup, Login }
 
@@ -6,12 +9,12 @@ class AuthForm extends StatefulWidget {
   const AuthForm({Key? key}) : super(key: key);
 
   @override
-  State<AuthForm> createState() => _AuthFormState();
+  _AuthFormState createState() => _AuthFormState();
 }
 
 class _AuthFormState extends State<AuthForm> {
   final _passwordController = TextEditingController();
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -32,107 +35,121 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
-  void _submit() {
-    final isValid = _formkey.currentState?.validate() ?? false;
-    if (isValid) {
+  Future<void> _submit() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
       return;
     }
+
     setState(() => _isLoading = true);
 
-    _formkey.currentState?.save;
+    _formKey.currentState?.save();
+    Auth auth = Provider.of(context, listen: false);
 
     if (_isLogin()) {
-      // login
+      //Login
     } else {
       // Registrar
+      await auth.signup(
+        _authData['email']!,
+        _authData['password']!,
+      );
     }
 
-    setState(() => _isLoading = true);
+    setState(() => _isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     return Card(
-        elevation: 10,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Container(
-            padding: const EdgeInsets.all(10),
-            height: _isLogin() ? 320 : 350,
-            width: deviceSize.width * 0.75,
-            child: Form(
-                key: _formkey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                        decoration: InputDecoration(labelText: 'E-mail'),
-                        keyboardType: TextInputType.emailAddress,
-                        onSaved: (email) => _authData['email'] = email ?? '',
-                        validator: (_email) {
-                          final email = _email ?? '';
-                          if (email.trim().isEmpty || !email.contains('@')) {
-                            return 'Informe um e-mail Válido.';
-                          }
-                          return null;
-                        }),
-                    TextFormField(
-                        decoration: InputDecoration(labelText: 'Senha'),
-                        keyboardType: TextInputType.emailAddress,
-                        obscureText: true,
-                        onSaved: (password) =>
-                            _authData['password'] = password ?? '',
-                        validator: (_password) {
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        height: _isLogin() ? 310 : 400,
+        width: deviceSize.width * 0.75,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(labelText: 'E-mail'),
+                keyboardType: TextInputType.emailAddress,
+                onSaved: (email) => _authData['email'] = email ?? '',
+                validator: (_email) {
+                  final email = _email ?? '';
+                  if (email.trim().isEmpty || !email.contains('@')) {
+                    return 'Informe um e-mail válido.';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(labelText: 'Senha'),
+                keyboardType: TextInputType.emailAddress,
+                obscureText: true,
+                controller: _passwordController,
+                onSaved: (password) => _authData['password'] = password ?? '',
+                validator: (_password) {
+                  final password = _password ?? '';
+                  if (password.isEmpty || password.length < 5) {
+                    return 'Informe uma senha válida';
+                  }
+                  return null;
+                },
+              ),
+              if (_isSignup())
+                TextFormField(
+                  style: TextStyle(color: Colors.black),
+                  decoration: InputDecoration(labelText: 'Confirmar Senha'),
+                  keyboardType: TextInputType.emailAddress,
+                  obscureText: true,
+                  validator: _isLogin()
+                      ? null
+                      : (_password) {
                           final password = _password ?? '';
-                          if (password.isEmpty || password.length > 8) {
-                            return 'Informe uma senha Válida';
+                          if (password != _passwordController.text) {
+                            return 'Senhas informadas não conferem.';
                           }
                           return null;
-                        }),
-                    if (_isSignup())
-                      TextFormField(
-                        decoration:
-                            InputDecoration(labelText: 'Confirmar Senha'),
-                        keyboardType: TextInputType.emailAddress,
-                        obscureText: true,
-                        controller: _passwordController,
-                        validator: _isLogin()
-                            ? null
-                            : (_password) {
-                                final password = _password ?? '';
-                                if (password != _passwordController.text) {
-                                  return 'Senhas informadas não conferem.';
-                                }
-                                return null;
-                              },
-                      ),
-                    const SizedBox(height: 20),
-                    if (_isLoading)
-                      CircularProgressIndicator()
-                    else
-                      ElevatedButton(
-                        onPressed: _submit,
-                        child: Text(_authMode == AuthMode.Login
-                            ? 'ENTRA'
-                            : 'REGISTRAR'),
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30,
-                              vertical: 8,
-                            )),
-                      ),
-                    Spacer(),
-                    TextButton(
-                      onPressed: _switchAuthMode,
-                      child: Text(_isLogin()
-                          ? 'DESEJA REGISTRAR?'
-                          : 'JÁ POSSUI CONTA?'),
+                        },
+                ),
+              SizedBox(height: 20),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  onPressed: _submit,
+                  child: Text(
+                    _authMode == AuthMode.Login ? 'ENTRAR' : 'REGISTRAR',
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
-                  ],
-                ))));
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 8,
+                    ),
+                  ),
+                ),
+              Spacer(),
+              TextButton(
+                onPressed: _switchAuthMode,
+                child: Text(
+                  _isLogin() ? 'DESEJA REGISTRAR?' : 'JÁ POSSUI CONTA?',
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

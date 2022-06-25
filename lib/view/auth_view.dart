@@ -37,14 +37,14 @@ class AuthView extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: Color.fromRGBO(65, 129, 129, 1),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             blurRadius: 15,
                             color: Color.fromARGB(255, 20, 20, 20),
                             offset: Offset(0, 2),
                           ),
                         ]),
-                    child: Text(
+                    child: const Text(
                       'Mercadinho',
                       style: TextStyle(
                           fontSize: 60,
@@ -53,7 +53,7 @@ class AuthView extends StatelessWidget {
                           color: Colors.white),
                     ),
                   ),
-                  AuthForm(),
+                  const AuthForm(),
                 ],
               )),
         ],
