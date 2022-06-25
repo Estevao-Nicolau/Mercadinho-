@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_provider/components/auth_form.dart';
 
 class AuthView extends StatelessWidget {
   const AuthView({Key? key}) : super(key: key);
@@ -29,10 +30,13 @@ class AuthView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    transform: Matrix4.rotationZ(-20 / 280)..translate(-5.0),
+                    margin: const EdgeInsets.only(
+                      bottom: 50,
+                    ),
+                    transform: Matrix4.rotationZ(10 / 180)..translate(-5.0),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Color.fromARGB(255, 65, 129, 129),
+                        color: Color.fromRGBO(65, 129, 129, 1),
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 15,
@@ -48,7 +52,8 @@ class AuthView extends StatelessWidget {
                           fontStyle: FontStyle.normal,
                           color: Colors.white),
                     ),
-                  )
+                  ),
+                  AuthForm(),
                 ],
               )),
         ],
