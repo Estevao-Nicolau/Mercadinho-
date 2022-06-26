@@ -4,13 +4,12 @@ import 'package:flutter_provider/models/cart.dart';
 import 'package:flutter_provider/models/order_list.dart';
 import 'package:flutter_provider/models/product_list.dart';
 import 'package:flutter_provider/routes/app_routes.dart';
-import 'package:flutter_provider/view/auth_view.dart';
+import 'package:flutter_provider/view/auth_or_home_page.dart';
 import 'package:flutter_provider/view/cart_view.dart';
 import 'package:flutter_provider/view/orders_view.dart';
 import 'package:flutter_provider/view/products_form_view.dart';
 import 'package:flutter_provider/view/products_view.dart';
 import 'package:flutter_provider/view/products_detail_page.dart';
-import 'package:flutter_provider/view/products_detail_view.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,16 +24,22 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (BuildContext context) => ProductList(),
+          create: (BuildContext context) => Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth, ProductList>(
+          create: (_) => ProductList('', []),
+          update: (ctx, auth, previous) {
+            return ProductList(
+              auth.token ?? '',
+              previous?.items ?? [],
+            );
+          },
         ),
         ChangeNotifierProvider(
           create: (BuildContext context) => Cart(),
         ),
         ChangeNotifierProvider(
           create: (BuildContext context) => OrderList(),
-        ),
-        ChangeNotifierProvider(
-          create: (BuildContext context) => Auth(),
         ),
       ],
       child: MaterialApp(
@@ -44,10 +49,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(secondary: Colors.red),
         ),
-        
         routes: {
-          AppRoutes.AUTH: (ctx) => AuthView(),
-          AppRoutes.HOME: (ctx) => ProductsViewDetail(),
+          AppRoutes.AUTH_OR_HOME: (ctx) => AuthOrHomeView(),
           AppRoutes.PRODUCT_DETAILS: (ctx) => ProductDetailPage(),
           AppRoutes.CART: (ctx) => CartView(),
           AppRoutes.ORDERS: (ctx) => OrdersView(),
