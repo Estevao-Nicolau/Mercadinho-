@@ -25,12 +25,6 @@ class _ProductsViewDetail extends State<ProductsViewDetail> {
   bool _showFavoritesOnly = false;
   bool _isLoading = true;
 
-  Future<void> _refreshProducts(BuildContext context) {
-    return Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).loadProducts();
-  }
 
   @override
   void initState() {
@@ -87,12 +81,9 @@ class _ProductsViewDetail extends State<ProductsViewDetail> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: _isLoading
-            ? Center(child: CircularProgressIndicator())
-            : ProductGrid(_showFavoritesOnly),
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ProductGrid(_showFavoritesOnly),
       drawer: AppDrawer(),
     );
   }
