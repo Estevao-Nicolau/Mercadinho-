@@ -9,7 +9,7 @@ import 'package:flutter_provider/models/product.dart';
 import '../exceptions/http_exception.dart';
 
 class ProductList with ChangeNotifier {
-  String _token;
+  final String _token;
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -62,7 +62,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('${Constants.PRODUCT_BASE_URL}.json'),
+      Uri.parse('${Constants.PRODUCT_BASE_URL}.json?auth=$_token'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -90,7 +90,7 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json?auth=$_token'),
         body: jsonEncode(
           {
             "name": product.name,
@@ -114,7 +114,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json'),
+        Uri.parse('${Constants.PRODUCT_BASE_URL}/${product.id}.json?auth=$_token'),
       );
 
       if (response.statusCode >= 400) {
