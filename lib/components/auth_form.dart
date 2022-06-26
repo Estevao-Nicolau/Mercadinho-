@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_provider/models/auth.dart';
 import 'package:provider/provider.dart';
 
-
 enum AuthMode { Signup, Login }
 
 class AuthForm extends StatefulWidget {
@@ -49,6 +48,10 @@ class _AuthFormState extends State<AuthForm> {
 
     if (_isLogin()) {
       //Login
+      await auth.login(
+        _authData['email']!,
+        _authData['password']!,
+      );
     } else {
       // Registrar
       await auth.signup(
