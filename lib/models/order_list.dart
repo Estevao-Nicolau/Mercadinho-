@@ -11,7 +11,10 @@ class OrderList with ChangeNotifier {
   final String _token;
   List<Order> _items = [];
 
-  OrderList(this._token, this._items);
+  OrderList([
+    this._token = '',
+    this._items = const [],
+  ]);
 
   List<Order> get items {
     return [..._items];
@@ -23,7 +26,7 @@ class OrderList with ChangeNotifier {
 
   Future<void> loadOrders() async {
     List<Order> items = [];
-    
+
     final response = await http.get(
       Uri.parse('${Constants.ORDERS_BASE_URL}.json?auth=$_token'),
     );

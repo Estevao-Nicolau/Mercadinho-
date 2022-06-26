@@ -32,7 +32,10 @@ class ProductGridItems extends StatelessWidget {
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
               onPressed: () {
-                product.toggleFavorite(auth.token ?? '');
+                product.toggleFavorite(
+                  auth.token ?? '',
+                  auth.userId ?? '',
+                );
               },
               icon: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -54,14 +57,19 @@ class ProductGridItems extends StatelessWidget {
                   SnackBar(
                     content: Text('Produto adicionado com sucesso'),
                     duration: Duration(seconds: 2),
-                    action: SnackBarAction(label: 'DESFAZER', onPressed: () {
-                      cart.removeSingleItem(product.id);
-                    },),
+                    action: SnackBarAction(
+                      label: 'DESFAZER',
+                      onPressed: () {
+                        cart.removeSingleItem(product.id);
+                      },
+                    ),
                   ),
                 );
                 // product.toggleCart();
               },
-              icon: Icon(product.isCart ? Icons.add_shopping_cart : Icons.shopping_cart),
+              icon: Icon(product.isCart
+                  ? Icons.add_shopping_cart
+                  : Icons.shopping_cart),
             ),
           ),
         ),
