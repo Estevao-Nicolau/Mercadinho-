@@ -41,9 +41,9 @@ class _OrderWidgetState extends State<OrderWidget> {
               horizontal: 15,
               vertical: 4,
             ),
-            height: widget.order.product.length * 30.0,
+            height: widget.order.products.length * 30.0,
             child: ListView(
-              children: widget.order.product.map(
+              children: widget.order.products.map(
                 (product) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
