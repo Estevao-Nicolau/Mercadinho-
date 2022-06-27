@@ -7,6 +7,7 @@ import 'package:flutter_provider/models/order_model.dart';
 import 'package:flutter_provider/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
+
 class OrderList with ChangeNotifier {
   final String _token;
   final String _userId;
@@ -30,18 +31,17 @@ class OrderList with ChangeNotifier {
     List<Order> items = [];
 
     final response = await http.get(
-      Uri.parse('${Constants.ORDERS_BASE_URL}$_userId.json?auth=$_token'),
+      Uri.parse('${Constants.ORDERS_BASE_URL}/$_userId.json?auth=$_token'),
     );
     if (response.body == 'null') return;
-
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((orderId, orderData) {
       items.add(
         Order(
           id: orderId,
-          date: DateTime.parse(orderData['data']),
+          date: DateTime.parse(orderData['date']),
           total: orderData['total'],
-          product: (orderData['products'] as List<dynamic>).map((item) {
+          products: (orderData['products'] as List<dynamic>).map((item) {
             return CartItem(
               id: item['id'],
               productId: item['productId'],
@@ -62,11 +62,11 @@ class OrderList with ChangeNotifier {
     final date = DateTime.now();
 
     final response = await http.post(
-      Uri.parse('${Constants.ORDERS_BASE_URL}$_userId.json?auth=$_token'),
+      Uri.parse('${Constants.ORDERS_BASE_URL}/$_userId.json?auth=$_token'),
       body: jsonEncode(
         {
           'total': cart.totalAmount,
-          'data': date.toIso8601String(),
+          'date': date.toIso8601String(),
           'products': cart.items.values
               .map((cartItem) => {
                     'id': cartItem.id,
@@ -79,16 +79,18 @@ class OrderList with ChangeNotifier {
         },
       ),
     );
+
     final id = jsonDecode(response.body)['name'];
     _items.insert(
       0,
       Order(
         id: id,
         total: cart.totalAmount,
-        product: cart.items.values.toList(),
         date: date,
+        products: cart.items.values.toList(),
       ),
     );
+
     notifyListeners();
   }
 }
