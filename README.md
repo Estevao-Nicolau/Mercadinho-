@@ -21,9 +21,7 @@ https://user-images.githubusercontent.com/79880613/175838006-b1073973-14ac-49f6-
 
 
 
-<h4 align="center"> 
-    :construction:  Projeto em construção  :construction:
-</h4>
+
 
 
 
